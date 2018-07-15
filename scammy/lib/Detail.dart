@@ -19,12 +19,6 @@ class Detail extends StatefulWidget {
 
   Detail({this.banks, this.cases, this.names, this.phones, this.usernames});
 
-//  Detail.fromSnapshot(DataSnapshot snapshot)
-//      : banks = snapshot.value["ListB"],
-//        cases = snapshot.value["ListC"],
-//        names = snapshot.value["Name"],
-//        phones = snapshot.value["ListP"],
-//        usernames = snapshot.value["ListU"];
 }
 
 class _DetailState extends State<Detail> {
@@ -45,9 +39,9 @@ class _DetailState extends State<Detail> {
             new Column(
               children: <Widget>[
                 Card(child: Text("Name ${widget.names}")),
-                _ExpansionTile("Bank List: ", widget.banks, "Bank"),
-                _ExpansionTile("Phone Number: ", widget.phones, "Phone"),
-                _ExpansionTile("Username: ", widget.usernames, "Username"),
+                _ExpansionTile("Bank List: ", widget.banks, "Bank" , "BankName"),
+                _ExpansionTile("Phone Number: ", widget.phones, "Phone" , null),
+                _ExpansionTile("Username: ", widget.usernames, "Username" , null),
                 _ExpansionTile2("Cases: ", widget.cases, "url"),
 
               ],
@@ -136,16 +130,42 @@ class _DetailState extends State<Detail> {
         });
   }
 
-  Widget _ExpansionTile(String title,List data,String type){
-    return Card(
-      child: ExpansionTile(
-        title: Text(title),
-        initiallyExpanded: true,
-        children: <Widget>[
-          _ListView3(data, type)
-        ],
-      ),
-    );
+  Widget _ListView4(List data, String type ,String other) {
+    return ListView.builder(
+        shrinkWrap: true,
+        padding: new EdgeInsets.all(8.0),
+        itemExtent: 20.0,
+        itemCount: data?.length ?? 0,
+        itemBuilder: (BuildContext context, int index) {
+          return Text(
+            "${data[index][other]}" + ": " + "${data[index][type]}",
+            softWrap: false,
+          );
+        });
+  }
+
+  Widget _ExpansionTile(String title,List data,String type,String other){
+    if(other?.isNotEmpty == true){
+      return Card(
+        child: ExpansionTile(
+          title: Text(title),
+          initiallyExpanded: true,
+          children: <Widget>[
+            _ListView4(data, type , other)
+          ],
+        ),
+      );
+    }else{
+      return Card(
+        child: ExpansionTile(
+          title: Text(title),
+          initiallyExpanded: true,
+          children: <Widget>[
+            _ListView3(data, type)
+          ],
+        ),
+      );
+    }
   }
   Widget _ExpansionTile2(String title,List data,String type){
     return Card(
